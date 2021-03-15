@@ -20,10 +20,10 @@ $output = "";
         foreach($var as $k => $v) {
             if ($k != "id" && $k != "password"){
                 if ($key === 0) {
-                    $query = "SELECT full_name from categories WHERE name='".$k."'";
+                    $query = "SELECT * from categories WHERE name='".$k."'";
                     $row = mysqli_fetch_assoc(mysqli_query($link,$query));
                     if ($row){
-                        $header = $row['full_name'];
+                        $header = $row['full_name']." (".$row['type'].")";
                     } else {
                         $header = $k;
                     }

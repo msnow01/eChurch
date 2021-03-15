@@ -80,14 +80,12 @@ h1 {
 }
 
 .alert-success {
-    /* font-weight: bold !important; */
     background-color: var(--red) !important;
     color: var(--white) !important;
     border: var(--red) solid 1px !important;
 }
 
 .alert-danger {
-    /* font-weight: bold !important; */
     background-color: var(--black) !important;
     color: var(--white) !important;
     border: var(--black) solid 1px !important;
@@ -102,7 +100,7 @@ h1 {
     position: fixed;
     width: 100%;
     z-index: 1000;
-    height: var(--alert-height);
+    min-height: var(--alert-height);
     margin-top: var(--alert-offset);
     padding-top: 1%;
     padding-bottom: 1%;
