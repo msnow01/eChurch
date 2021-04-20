@@ -28,15 +28,7 @@ $header_address = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content W
 
 </head>
 
-<!-- TO DO _-->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N5S1NNB9VW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-N5S1NNB9VW');
-</script>
-
+<!-- TO DO -->
 <?php
 $noreply_email_address = "";
 $tiny_mce_id = "";
