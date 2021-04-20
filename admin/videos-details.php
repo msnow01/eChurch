@@ -12,8 +12,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 
 <?php
 $title = "Video Manager Details";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 $video_id = $_GET['id'];
@@ -29,7 +29,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitaddvideo'])){
     if (isset($_POST['submitaddvideo'])){
         $query = "INSERT INTO videos (title, date, category, iframe) VALUES ('".$videotitle."', '".$date."', '".$category."', '".$iframe."')";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         } else {
             echo '<meta http-equiv="refresh" content="0; URL='.$dir.'admin/videos.php" />';
         }
@@ -38,7 +38,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitaddvideo'])){
     if (isset($_POST['submitchanges'])){
         $query = "UPDATE videos SET title='".$videotitle."', date='".$date."', category='".$category."', iframe='".$iframe."' WHERE ID='".$video_id."'";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
     }
 }
@@ -53,7 +53,7 @@ $video_row = mysqli_fetch_assoc(mysqli_query($link,$query));
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin/videos.php" class="view-more" title="Back"><i class="fas fa-angle-left"></i>&nbsp;See all videos</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
 
         <p>&nbsp;</p>
 
@@ -71,44 +71,52 @@ $video_row = mysqli_fetch_assoc(mysqli_query($link,$query));
                 <form method="post">
                     <div class="row">
                         <div class="col-md-12">
-                                <h3><label for="videotitle">Title</label></h3>
-                                <p><input type="text" required name="videotitle" autocomplete="off" class="form-control" value="<?php echo $video_row['title']; ?>"></p>
+                            <h3><label for="videotitle">Title</label></h3>
+                            <p><input type="text" required name="videotitle" autocomplete="off" class="form-control" value="<?php echo $video_row['title']; ?>"></p>
 
-                                <p>&nbsp;</p>
+                            <p>&nbsp;</p>
 
-                                <h3><label for="date">Date</label></h3>
-                                <p><input type="date" required name="date" placeholder="Date" value="<?php echo $video_row['date']; ?>" class="form-control"></p>
+                            <h3><label for="date">Date</label></h3>
+                            <?php
+                            if ($video_id){
+                                $date_default = $video_row['date'];
+                            } else {
+                                $date_default = date("Y-m-d");
+                            }
+                            ?>
+                            <p><input type="date" required name="date" placeholder="Date" value="<?php echo $date_default; ?>" class="form-control"></p>
 
-                                <p>&nbsp;</p>
+                            <p>&nbsp;</p>
 
-                                <h3><label for="category">Category</label></h3>
-                                <select class="form-control" required name="category">
-                                <?php
-                                $query = "SELECT * from categories WHERE type='VIDEO'";
-                                if ($result = $link->query($query)) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo '<option value="'.$row['name'].'"';
-                                        if ($row['name'] == $video_row['category']){
-                                            echo " selected ";
-                                        }
-                                        echo '>'.$row['full_name'].'</option>';
+                            <h3><label for="category">Category</label></h3>
+                            <select class="form-control" required name="category">
+                            <?php
+                            $query = "SELECT * from categories WHERE type='VIDEO'";
+                            if ($result = $link->query($query)) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo '<option value="'.$row['name'].'"';
+                                    if ($row['name'] == $video_row['category']){
+                                        echo " selected ";
                                     }
+                                    echo '>'.$row['full_name'].'</option>';
                                 }
-                                ?>
-                                </select>
-                                <p>&nbsp;</p>
+                            }
+                            ?>
+                            </select>
+                            <p>&nbsp;</p>
 
-                                <h3 style="float:left"><label for="iframe">Embed Code</label></h3>
-                                <?php
-                                $tooltip_text="If needed, set width=\"100%\" and height=\"140\".";
-                                tooltip($tooltip_text, FALSE);
-                                ?>
+                            <h3 style="float:left"><label for="iframe">Embed Code</label></h3>
+                            <?php
+                            $tooltip_text="If needed, set width=\"100%\" and height=\"140\".";
+                            tooltip($tooltip_text, FALSE);
+                            ?>
 
-                                <label for="iframe" class="display-none">Embed Code</label>
-                                <textarea required class="form-control" name="iframe"><?php echo $video_row['iframe']; ?></textarea>
+                            <label for="iframe" class="display-none">Embed Code</label>
+                            <textarea required class="form-control" name="iframe"><?php echo $video_row['iframe']; ?></textarea>
 
-                                <p>&nbsp;</p>
-                                <hr>
+                            <p>&nbsp;</p>
+                            <hr>
+                            <br>
                         </div>
                     </div>
                     <div class="row">

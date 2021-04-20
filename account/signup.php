@@ -1,8 +1,9 @@
 <?php
 $dir="../";
-include $dir."inc/connection.php";
 $title = "Sign Up";
+include $dir."inc/connection.php";
 include $dir."inc/header.php";
+include $dir."inc/countries.php";
 include $dir."inc/functions.php";
 
 //sign up form functionality
@@ -11,23 +12,22 @@ if (isset($_POST['submitsignup'])) {
     $name = addslashes(upperWords($_POST['name']));
     $email = addslashes(strtolower($_POST['email']));
     $city = addslashes(upperWords($_POST['city']));
-    $country = addslashes(upperWords($_POST['country']));
+    $country = $_POST['country'];
     $pass = addslashes($_POST['password2']);
     $pass3 = addslashes($_POST['password3']);
     $password = sha1($pass); //encrypt password
-    $error1 = "";
 
     //check that all fields are filled
     if (!$name || !$email || !$pass || !$city || !$country){
-        $error1 = "<div class='alert alert-danger'>Sorry, you must provide your name, email address, city, country, and a password.</div>";
+        $alert_message = printAlert('danger', 'Sorry, you must provide your name, email address, city, country, and a password.');
     } else if ($pass != $pass3){
-        $error1 = "<div class='alert alert-danger'>Passwords do not match.</div>";
+        $alert_message = printAlert('danger', 'Passwords do not match.');
     } else {
         //check for existing account
         $querycheck = "SELECT * from users WHERE email='".$email."'";
         $rowcount = mysqli_num_rows(mysqli_query($link,$querycheck));
         if ($rowcount > 0){
-            $error1 = "<div class='alert alert-danger'>Sorry, there is already an account associated with this email address.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there is already an account associated with this email address.');
         } else {
             $query = "INSERT INTO users (email, password, name, city, country, type) VALUES ('".$email."', '".$password."', '".$name."', '".$city."', '".$country."', 'PENDING')";
 
@@ -41,31 +41,31 @@ if (isset($_POST['submitsignup'])) {
                 $message .= "<p>Email: ".$email."</p>";
                 $message .= "<p>City: ".$city."</p>";
                 $message .= "<p>Country: ".$country."</p>";
-                $message .= "<p><a href='https://echurch.miriamsnow.com/admin'>Click here</a> to verify this account.</p>";
-                $header = "From: ".$site_title." <".$admin_email_address."> \r\n";
+                $message .= "<p><a href='".$base_url."admin'>Click here</a> to verify this account.</p>";
+                $header = "From: ".$site_title." <".$noreply_email_address."> \r\n";
                 $header .= "MIME-Version: 1.0\r\n";
                 $header .= "Content-type: text/html\r\n";
                 $retval = mail ($to,$subject,$message,$header);
                 if ($retval == TRUE) {
-                    $error1 = "<div class='alert alert-success'>Thank you for signing up. You will receive a confirmation email shortly.</div>";
+                    $alert_message = printAlert('success', 'Thank you for signing up. You will receive a confirmation email shortly.');
                 } else {
-                    $error1 = "<div class='alert alert-danger'>Sorry, there was an error.<br>Please try again later.</div>";
+                    $alert_message = printAlert('danger', 'Sorry, there was an error.<br>Please try again later.');
                 }
 
 
                 //send email to person signing up
                 $subject = "Sign Up Confirmation";
-                $message = "<p>Thank you for requesting access to eChurch website.</p><p>Your request is being reviewed and if approved, your access will be granted within 24 hours.</p>";
-                $header = "From: ".$site_title." <".$admin_email_address."> \r\n";
+                $message = "<p>Thank you for requesting access to ".$site_title.".</p><p>Your request is being reviewed and you will receive an email confirmation once approved.</p>";
+                $header = "From: ".$site_title." <".$noreply_email_address."> \r\n";
                 $header .= "MIME-Version: 1.0\r\n";
                 $header .= "Content-type: text/html\r\n";
                 $retval = mail ($email,$subject,$message,$header);
                 if (!$retval) {
-                    $error1 = "<div class='alert alert-danger'>Sorry, there was an error.<br>Please try again later.</div>";
+                    $alert_message = printAlert('danger', 'Sorry, there was an error.<br>Please try again later.');
                 }
 
             } else {
-                $error1 = "<div class='alert alert-danger'>Sorry, there was an error.<br>Please try again later.</div>";
+                $alert_message = printAlert('danger', 'Sorry, there was an error.<br>Please try again later.');
             }
         }
     }
@@ -85,12 +85,21 @@ if (isset($_POST['submitsignup'])) {
                 <div class="col-md-5 white-box" data-aos="fade-in">
                     <h2>Sign Up</h2>
                     <p>If you have an existing account,<br>please <a href="<?php echo $dir;?>account/login.php" class="view-more" title="Log In">log in</a>.</p>
-                    <?php echo $error1; ?>
+                    <?php echo $alert_message; ?>
                     <form method="post">
                         <p><label for="name" class="display-none">Full Name</label><input required autocomplete="off" type="text" class="form-control" name="name" id="name" placeholder="Full Name"></p>
                         <p><label for="email" class="display-none">Email</label><input required autocomplete="off" type="email" class="form-control" name="email" id="email" placeholder="Email"></p>
                         <p><label for="city" class="display-none">City</label><input required autocomplete="off" type="text" class="form-control" name="city" id="city" placeholder="City"></p>
-                        <p><label for="country" class="display-none">Country</label><input required autocomplete="off" type="text" class="form-control" name="country" id="country" placeholder="Country"></p>
+                        <p><label for="country" class="display-none">Country</label>
+                            <select class="form-control" required autocomplete="off" name="country" id="country">
+                            <?php
+                            echo '<option value="">Country</option>';
+                            foreach ($countries as $val) {
+                                echo '<option value="'.$val['name'].'">'.$val['name'].'</option>';
+                            }
+                            ?>
+                            </select>
+                        </p>
                         <p><label for="password2" class="display-none">Password</label><input autocomplete="off" required type="password" class="form-control" name="password2" id="password2" placeholder="Password"></p>
                         <p><label for="password3" class="display-none">Confirm Password</label><input autocomplete="off" required type="password" class="form-control" name="password3" id="password3" placeholder="Confirm Password"></p>
                         <p><input name="showpass2" class="text-left" id="showpass2" type="checkbox" onclick="showpassword2()"><label for="showpass2">&nbsp;Show Password</label></p>

@@ -2,8 +2,8 @@
 $dir="../";
 include $dir."inc/session-start.php";
 $title = "Contact";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 ?>
 
@@ -27,7 +27,7 @@ include $dir."inc/functions.php";
                             $to = $admin_email_address;
                             $subject = "Message from ".$name;
                             $message = "<p>Message from ".$name." at " .$email."</p><p>".$form_message."</p>";
-                            $header = "From: ".$site_title." <".$admin_email_address."> \r\n";
+                            $header = "From: ".$site_title." <".$noreply_email_address."> \r\n";
                             $header .= "MIME-Version: 1.0\r\n";
                             $header .= "Reply-To: ".$email."" . "\r\n";
                             $header .= "Content-type: text/html\r\n";

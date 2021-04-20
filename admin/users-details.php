@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 }
 
 $title = "User Manager Details";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 $user_id = $_GET['id'];
 
@@ -32,7 +32,9 @@ if (isset($_POST['submitchanges'])) {
             $query = "UPDATE users SET $val='0' WHERE id='".$user_id."'";
         }
         if (!mysqli_query($link,$query)){
-            echo "error<br> with ".$query;
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
+        } else {
+            $alert_message = printAlert('success', 'Success!');
         }
     }
 
@@ -40,13 +42,40 @@ if (isset($_POST['submitchanges'])) {
     $usertype = $_POST['usertype'];
     $query = "UPDATE users SET type='".$usertype."' WHERE id='".$user_id."'";
     if (!mysqli_query($link,$query)){
-        echo "error<br> with ".$query;
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
+    } else {
+        $alert_message = printAlert('success', 'Success!');
     }
+
 }
 
 //get info for this user
 $query = "SELECT * from users WHERE id='".$user_id."'";
 $user_row = mysqli_fetch_assoc(mysqli_query($link,$query));
+
+//send confirmation email if this is the first time editing
+if (isset($_POST['submitchanges'])) {
+    if ($user_row['confirmed'] == 0 && $user_row['usertype'] != "PENDING"){
+
+        $to = $user_row['email'];
+        $subject = "Account Approved";
+        $message = "<p>Your request for access to ".$site_title." has been approved.</p>";
+        $message .= "<p><a href='".$base_url."'>Click here</a> to visit the site.</p>";
+        $header = "From: ".$site_title." <".$noreply_email_address."> \r\n";
+        $header .= "MIME-Version: 1.0\r\n";
+        $header .= "Content-type: text/html\r\n";
+        $retval = mail ($to,$subject,$message,$header);
+        if ($retval == TRUE) {
+            $alert_message = printAlert('success', 'Confirmation email sent!');
+            $query = "UPDATE users SET confirmed='1' WHERE id='".$user_id."'";
+            if (!mysqli_query($link,$query)){
+                $alert_message = printAlert('danger', 'The confirmation email was sent, but there was an error updating the user.');
+            }
+        } else {
+            $alert_message = printAlert('danger', 'Sorry, there was an error.<br>Please try again later.');
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,6 +90,7 @@ $user_row = mysqli_fetch_assoc(mysqli_query($link,$query));
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">
                 <h2><?php echo $user_row['name']; ?></h2>
+                <?php echo $alert_message; ?>
                 <hr>
                 <?php
                 //can't manage your own permissions
@@ -70,7 +100,6 @@ $user_row = mysqli_fetch_assoc(mysqli_query($link,$query));
                     <div class="row">
                         <div class="col-md-12">
                             <?php
-
                                 echo '<br><h3>TYPE</h3>';
                                 foreach ($user_types as $val){
                                     echo '<p><label for="'.$val.'" class="display-none">'.$val.'</label>';

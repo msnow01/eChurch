@@ -12,8 +12,8 @@ if ($_SESSION['login_type'] != "SUPER" && $_SESSION['login_type'] != "ADMIN") {
 
 <?php
 $title = "Alerts Manager Details";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 $alert_id = $_GET['id'];
 
@@ -22,7 +22,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitadd'])) {
 
     //get values from form
     $alerttitle = upperWords(addslashes($_POST['alerttitle']));
-    $text = addslashes($_POST['text']);
+    $text = substr(addslashes($_POST['text']), 0, 295);
     $category = "";
 
     //get Category values
@@ -44,7 +44,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitadd'])) {
     if (isset($_POST['submitchanges'])){
         $query = "UPDATE alerts SET title='".$alerttitle."', category='".$category."', text='".$text."' WHERE ID='".$alert_id."'";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
     }
 
@@ -52,7 +52,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitadd'])) {
     if (isset($_POST['submitadd'])){
         $query = "INSERT INTO alerts (title, category, text) VALUES ('".$alerttitle."', '".$category."', '".$text."')";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         } else {
             echo '<meta http-equiv="refresh" content="0; URL='.$dir.'admin/alerts.php" />';
         }
@@ -70,7 +70,7 @@ $alert_row = mysqli_fetch_assoc(mysqli_query($link,$query));
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin/alerts.php" class="view-more" title="Back"><i class="fas fa-angle-left"></i>&nbsp;See all alerts</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
 
         <p>&nbsp;</p>
 
@@ -88,48 +88,52 @@ $alert_row = mysqli_fetch_assoc(mysqli_query($link,$query));
                 <form method="post" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-md-12">
-                                <h3 style="float:left"><label for="alerttitle">Title</label></h3>
-                                <?php
-                                $tooltip_text = "Your title won't be visible on the alert, only the text you provide below.";
-                                tooltip($tooltip_text, TRUE);
-                                ?>
-                                <p><input type="text" required name="alerttitle" autocomplete="off" class="form-control" value="<?php echo $alert_row['title']; ?>"></p>
+                            <h3 style="float:left"><label for="alerttitle">Title</label></h3>
+                            <?php
+                            $tooltip_text = "Your title won't be visible on the alert, only the text you provide below.";
+                            tooltip($tooltip_text, TRUE);
+                            ?>
+                            <p><input type="text" required name="alerttitle" autocomplete="off" class="form-control" value="<?php echo $alert_row['title']; ?>"></p>
 
-                                <p>&nbsp;</p>
+                            <p>&nbsp;</p>
 
-                                <h3 style="float:left"><label for="text">Text</label></h3>
-                                <textarea name="text" class="form-control"><?php echo $alert_row['text']; ?></textarea>
+                            <?php
+                            echo '<h3 style="float:left">Category</h3>';
+                            $tooltip_text = "Choose who will have permissions to see your alert. If you don't select a category, the alert will not be visible on the site.";
+                            tooltip($tooltip_text, TRUE);
 
-                                <p>&nbsp;</p>
+                            $query = "SELECT * from categories WHERE type='ALERT'";
+                            if ($result = $link->query($query)) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo '<p>';
+                                    echo '<input type="checkbox" ';
 
-                                <?php
-                                echo '<h3 style="float:left">Category</h3>';
-                                $tooltip_text = "Choose who will have permissions to see your alert. If you don't select a category, the alert will not be available on the site.";
-                                tooltip($tooltip_text, TRUE);
-
-                                $query = "SELECT * from categories WHERE type='ALERT'";
-                                if ($result = $link->query($query)) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo '<p>';
-                                        echo '<input type="checkbox" ';
-
-                                        //select existing ones
-                                        $alert_categories = explode(", ", $alert_row['category']);
-                                        foreach ($alert_categories as $val){
-                                            if ($val == $row['name']){
-                                                echo ' checked ';
-                                            }
+                                    //select existing ones
+                                    $alert_categories = explode(", ", $alert_row['category']);
+                                    foreach ($alert_categories as $val){
+                                        if ($val == $row['name']){
+                                            echo ' checked ';
                                         }
-                                        echo ' name="'.$row['name'].'">';
-                                        echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-                                        echo '<label for="'.$row['name'].'">'.$row['full_name'].'</label>';
-                                        echo '</p>';
                                     }
+                                    echo ' name="'.$row['name'].'">';
+                                    echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+                                    echo '<label for="'.$row['name'].'">'.$row['full_name'].'</label>';
+                                    echo '</p>';
                                 }
-                                ?>
+                            }
+                            ?>
+                            <p>&nbsp;</p>
 
-                                <br>
-                                <hr>
+                            <h3 style="float:left"><label for="text">Text</label></h3>
+                            <?php
+                            $tooltip_text = "Your alert must have a maximum of 295 characters.";
+                            tooltip($tooltip_text, TRUE);
+                            ?>
+                            <textarea name="text" rows="5" class="form-control"><?php echo $alert_row['text']; ?></textarea>
+
+                            <p>&nbsp;</p>
+                            <hr>
+                            <br>
                         </div>
                     </div>
                     <div class="row">

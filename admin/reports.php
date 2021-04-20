@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER" && $_SESSION['login_type'] != "ADMIN") {
 }
 
 $title = "Reports Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 $directory = "admin/reports";
 
@@ -45,8 +45,7 @@ $output = "";
                 if ($v == "0"){
                     $v = "NO";
                 }
-
-                $output .= $v . ',';
+                $output .= str_replace(",","",$v).',';
             }
         }
         $output .= "\r\n";
@@ -55,7 +54,6 @@ $output = "";
 //create the file
 if (isset($_POST['newreport'])){
     $filename = $dir.$directory."/".date("mdyGis")." - User Report ".date("M d Y").".csv";
-    echo $filename;
     $myfile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($myfile, $output);
     fclose($myfile);

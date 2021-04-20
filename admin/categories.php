@@ -6,8 +6,8 @@ if ($_SESSION['login_type'] != "SUPER") {
     header($location);
 }
 $title = "Category Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 if (isset($_POST['submitdelete'])){
@@ -17,13 +17,13 @@ if (isset($_POST['submitdelete'])){
     //remove from list of categories
     $query = "DELETE FROM categories WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 
     //remove users column
     $query = "ALTER TABLE users DROP COLUMN ".$name;
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 }
 
@@ -34,7 +34,7 @@ if (isset($_POST['submitedit'])){
     //remove from list of categories
     $query = "UPDATE categories SET full_name='".$new_name."' WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 }
 
@@ -44,9 +44,9 @@ if (isset($_POST['submitpermissions'])){
     //update all from list of users
     $query = "UPDATE users SET ".$name."='1'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     } else {
-        $error1 = "<div class='alert alert-success'>Success!</div>";
+        $alert_message = printAlert('success', 'Success!');
     }
 }
 
@@ -61,31 +61,30 @@ if (isset($_POST['submitadd'])){
     $query = "SELECT * from categories WHERE name='".$colname."'";
     $rowcount = mysqli_num_rows(mysqli_query($link,$query));
     if ($rowcount > 0){
-        $error1 = "<div class='alert alert-danger'>Sorry, that category already exists.</div>";
-    } else if ($colname == "id" || $colname == "name" || $colname == "email" || $colname == "country" || $colname == "type" || $colname == "city" || $colname == "password"){
-        $error1 = "<div class='alert alert-danger'>Sorry, you cannot use the following reserved keywords for cateogory names: name, email, type, id, country, city, password.</div>";
+        $alert_message = printAlert('danger', 'Sorry, that category already exists.');
+    } else if ($colname == "id" || $colname == "name" || $colname == "email" || $colname == "country" || $colname=="confirmed" || $colname == "type" || $colname == "city" || $colname == "password"){
+        $alert_message = printAlert('danger', 'Sorry, you cannot use the following reserved keywords for cateogory names: name, email, type, id, country, city, password.');
     } else {
 
         //add to list of categories
         $query = "INSERT INTO categories (type, name, full_name) VALUES ('".$cattype1."', '".$colname."', '".$catname1."')";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
 
         //add as users column
         $query = "ALTER TABLE users ADD ".$colname." tinyint(1)";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
 
         //give all supers permission
         $query = "UPDATE users SET ".$colname."='1' WHERE type='SUPER'";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
     }
 }
-
 ?>
 
 <!-- Add category Modal -->
@@ -94,7 +93,7 @@ if (isset($_POST['submitadd'])){
     <div class="modal-content">
       <div class="modal-body">
           <h2>Add Category</h2>
-          <?php echo $error1; ?>
+          <?php echo $alert_message; ?>
       </div>
       <form method="post">
           <div class="modal-body">
@@ -105,7 +104,9 @@ if (isset($_POST['submitadd'])){
                   <select class="form-control" name="cattype" required placeholder="Category Type">
                       <?php
                       foreach ($category_types as $val){
-                          echo '<option value="'.$val.'">'.$val.'</option>';
+                          if ($val != "LIVE"){
+                              echo '<option value="'.$val.'">'.$val.'</option>';
+                          }
                       }
                       ?>
                   </select>
@@ -240,7 +241,7 @@ if ($result = $link->query($query)) {
                   </thead>
                   <tbody>
                       <?php
-                      $query = "SELECT * from categories ORDER BY type ASC";
+                      $query = "SELECT * from categories WHERE type != 'LIVE' ORDER BY type ASC";
                       if ($result = $link->query($query)) {
                           while ($row = $result->fetch_assoc()) {
                               echo "<tr>";

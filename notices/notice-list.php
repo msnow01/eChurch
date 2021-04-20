@@ -29,13 +29,6 @@
                     echo '<h3>'.$row['title'].'</h3>';
                     echo '<p class="sm-font">'.dateFormat($row['date']).'</p>';
                     echo $row['text'];
-                    for ($i=0; $i<=$maximages; $i++){
-                        $val = "image".$i;
-                        if ($row[$val]){
-                            echo '<a href="" data-toggle="modal" data-target="#notice'.$row['id'].'preview'.$val.'" title="Preview image">';
-                            echo '<img src="'.$dir.'notices/noticeimages/'.$row[$val].'" alt="Image '.$i.'" width="30%"></a>&nbsp;&nbsp;';
-                        }
-                    }
                     echo "</div><br>";
                 }
             }

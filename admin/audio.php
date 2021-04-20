@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 }
 
 $title = "Audio Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 $directory = "audio/audiofiles/";
@@ -25,45 +25,9 @@ if(isset($_POST['submitdelete'])){
     $number = $_POST['number'];
     $query = "DELETE FROM audio WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 
-}
-
-//add new audio form functionality
-if(isset($_POST['submitaudio'])){
-    $filename = $_FILES["audiofile"]["name"];
-
-    if (!$filename){
-        $error1 = "<div class='alert alert-danger'>Sorry, you must choose an audio file.</div>";
-    } else {
-        $fileType = strtolower(pathinfo(basename($filename),PATHINFO_EXTENSION));
-        if ($fileType != "mp3"){
-            $error1 = "<div class='alert alert-danger'>Sorry, wrong file type. Only mp3 allowed.</div>";
-        } else {
-            $filename2 = str_replace("#", "", $filename);
-            $target_file = $dir.$directory.$filename2;
-            if (move_uploaded_file($_FILES["audiofile"]["tmp_name"], $target_file)) {
-
-                $category = $_POST['category'];
-
-                $year = substr($filename, 0, 4);
-                $month = substr($filename, 5, 2);
-                $day = substr($filename, 7, 2);
-                $date_string = $year."-".$month."-".$day;
-                $date = date("Y-m-d", strtotime($date_string));
-
-                $name = upperWords(substr($filename, 10, -4));
-
-                $query = "INSERT INTO audio (title, date, category, file) VALUES ('".$name."', '".$date."', '".$category."', '".$filename2."')";
-                if (!mysqli_query($link,$query)){
-                    $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
-                }
-            } else {
-                $error1 = "<div class='alert alert-danger'>Sorry, there was an error uploading your file. Please try again.</div>";
-            }
-        }
-    }
 }
 
 
@@ -121,40 +85,6 @@ if ($result = $link->query($query)) {
 
 ?>
 
-<!-- Add audio file Modal -->
-<div class="modal fade" id="addaudio" data-backdrop="static" tabindex="-1" aria-labelledby="add audio" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-          <h2>Add Audio</h2>
-          <p>Your file name MUST be in the following format:<br><strong>YYYY MMDD NAME OF FILE.mp3</strong></p>
-      </div>
-      <form method="post" enctype="multipart/form-data">
-          <div class="modal-body">
-             <p><label for="audiofile" class="display-none">Choose File</label>
-                 <input type="file" required class="form-control" name="audiofile"></p>
-              <p>
-                  <select class="form-control" name="category" required placeholder="Category">
-                      <?php
-                      $query = "SELECT * from categories WHERE type='AUDIO'";
-                      if ($result = $link->query($query)) {
-                          while ($row = $result->fetch_assoc()) {
-                              echo '<option value="'.$row['name'].'">'.$row['full_name'].'</option>';
-                          }
-                      }
-                      ?>
-                  </select>
-              </p>
-          </div>
-          <div class="modal-footer">
-              <input type="submit" name="submitaudio" class="btn btn-dark" value="Add Audio">
-              <a href="" class="btn btn-dark" data-dismiss="modal">Close</a>
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -163,11 +93,11 @@ if ($result = $link->query($query)) {
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin" class="view-more" title="Administration Dashboard"><i class="fas fa-angle-left"></i>&nbsp;Back to dashboard</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
         <p>&nbsp;</p>
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">
-                <p><a href='' data-target='#addaudio' data-toggle='modal' class='btn btn-dark'>Add Audio</a></p>
+                <p><a href="<?php echo $dir;?>admin/audio-details.php" class="btn btn-dark">Add Audio</a></p>
             </div>
             <div class="col-md-12 overflow">
                 <table class="table table-striped">

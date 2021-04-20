@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 }
 
 $title = "File Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 $directory = "files";
@@ -18,7 +18,7 @@ if(isset($_POST['submitadd'])){
     $input_name = "file";
     $filename = $_FILES[$input_name]["name"];
     if (!$filename){
-        $error1 = "<div class='alert alert-danger'>Sorry, you must choose a file.</div>";
+        $alert_message = printAlert('danger', 'Sorry, you must choose a file.');
     } else {
 
         $target_dir = $dir.$directory."/";
@@ -39,10 +39,10 @@ if(isset($_POST['submitadd'])){
             $brandnewfile = $current_date."_".$filename;
             $target_file = $target_dir.$brandnewfile;
             if (!move_uploaded_file($_FILES[$input_name]["tmp_name"], $target_file)) {
-                $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+                $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
             }
         } else {
-            $error1 = "<div class='alert alert-danger'>Sorry, wrong file type. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, wrong file type. Please try again.');
         }
     }
 
@@ -95,18 +95,31 @@ foreach($files as $val){
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin" class="view-more" title="Administration Dashboard"><i class="fas fa-angle-left"></i>&nbsp;Back to dashboard</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
         <p>&nbsp;</p>
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">
                 <form method="post" enctype="multipart/form-data">
-                    <p>
-                        <label for="submitadd" class="display-none">Add File</label>
-                        <input type="submit" name="submitadd" class="btn btn-dark" value="Add File">
-
-                        <label for="file" class="display-none">Choose File</label>
-                        <input type="file" name="file" required>
-                    </p>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <p>
+                                <label for="submitadd" class="display-none">Add File</label>
+                                <input type="submit" name="submitadd" class="btn btn-dark" value="Add File">
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <label for="file" class="display-none">Choose File</label>
+                                <input type="file" name="file" class="form-control" required>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <?php
+                            $tooltip_text="Maximum file size is 2MB.";
+                            tooltip($tooltip_text, TRUE);
+                            ?>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="col-md-12 overflow">
@@ -153,6 +166,5 @@ function copyText(k) {
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand("copy");
-    alert("Copied link!");
  }
  </script>

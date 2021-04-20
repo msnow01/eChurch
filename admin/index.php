@@ -6,8 +6,8 @@ if ($_SESSION['login_type'] != "SUPER" && $_SESSION['login_type'] != "ADMIN") {
     header($location);
 }
 $title = "Dashboard";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 ?>
@@ -55,11 +55,27 @@ include $dir."inc/functions.php";
             if ($_SESSION['login_type'] == "SUPER") {
                 printModule("Files", "fas fa-file-alt");
             }
-            
+
             if ($_SESSION['login_type'] == "SUPER") {
                 printModule("Resources", "fas fa-link");
             }
 
+            ?>
+        </div>
+        <p>&nbsp;</p>
+        <div class="row justify-content-around text-middle">
+            <?php
+            if ($_SESSION['login_type'] == "SUPER") {
+                printModule("Live", "fas fa-play");
+            }
+
+            if ($_SESSION['login_type'] == "SUPER") {
+                printModule("Design", "fas fa-pencil-ruler");
+            }
+
+            if ($_SESSION['login_type'] == "SUPER") {
+                printModule("Contact", "fas fa-envelope");
+            }
             ?>
         </div>
     </div>

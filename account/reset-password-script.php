@@ -1,8 +1,10 @@
 <?php
 $dir="../";
 $title = "Reset Password";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
+include $dir."inc/functions.php";
+
 
 $idval = $_GET['id'];
 $flag = FALSE;
@@ -17,7 +19,7 @@ if ($result = $link->query($query)) {
 }
 
 if (!$flag){
-    $error1 = "<div class='alert alert-danger'>Sorry, you do not have access to this page.<br>Please contact your system administrator for help.</div>";
+    $alert_message = printAlert('danger', 'Sorry, you do not have access to this page.<br>Please contact your system administrator for help.');
 }
 
 if (isset($_POST['submitpass'])){
@@ -26,17 +28,18 @@ if (isset($_POST['submitpass'])){
     $pass2 = addslashes($_POST['password2']);
 
     if (!$pass1 || !$pass2){
-        $error1 = "<div class='alert alert-danger'>Sorry, you must fill in all password fields.</div>";
+        $alert_message = printAlert('danger', 'Sorry, you must fill in all password fields');
     } else {
         if ($pass1 != $pass2){
-            $error1 = "<div class='alert alert-danger'>Sorry, passwords do not match.</div>";
+            $alert_message = printAlert('danger', 'Sorry, passwords do not match.');
         }  else {
             $newpass = sha1($pass1);
             $query = "UPDATE users SET password='".$newpass."' WHERE ID='".$idvalue."'";
             if (mysqli_query($link,$query)){
-                $error1 = "<div class='alert alert-success'>Successfully changed password!<br>Please <a class='view-more' href='".$dir."account/logout.php'>log in</a> here.</div>";
+                $alert_message_text = "Successfully changed password!<br>Please <a class='view-more' href='".$dir."account/logout.php'>log in</a> here.";
+                $alert_message = printAlert('success', $alert_message_text);
             } else {
-                $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+                $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
             }
         }
     }
@@ -55,11 +58,11 @@ if (isset($_POST['submitpass'])){
                     <h2>Reset Password</h2>
                     <?php
                     if (!$flag){
-                        echo $error1;
+                        echo $alert_message;
                     } else {
                     ?>
                     <p>Type your new password below.</p>
-                    <?php echo $error1; ?>
+                    <?php echo $alert_message; ?>
                     <form method="post">
                         <p><label for="password1" class="display-none">Password*</label><input autocomplete="off" required type="password" class="form-control" id="password1" name="password1" placeholder="Password"></p>
                         <p><label for="password2" class="display-none">Confirm Password*</label><input autocomplete="off" required type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password"></p>

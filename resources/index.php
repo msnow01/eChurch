@@ -2,8 +2,8 @@
 $dir="../";
 include $dir."inc/session-start.php";
 $title = "Resources";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 ?>

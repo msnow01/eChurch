@@ -2,8 +2,8 @@
 $dir="../";
 include $dir."inc/session-start.php";
 $title = "Video";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 $query = "SELECT * from categories WHERE type='VIDEO'";
@@ -83,7 +83,7 @@ $div = $counter/$maxvideos;
                                     if ($result = $link->query($query)) {
                                         while ($row = $result->fetch_assoc()) {
                                             echo '<div class="col-md-3">
-                                                <div class="shadow">'.$row['iframe'].'</div>
+                                                <div class="shadow video-frame">'.$row['iframe'].'</div>
                                                 <br>
                                                 <h3>'.$row['title'].'</h3>
                                                 <p class="sm-font">'.dateFormat($row['date']).'</p>

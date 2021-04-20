@@ -1,17 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arizonia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap');
 
 :root {
   --dark-grey: #4f4e4e;
   --black: #000000;
   --white: #ffffff;
-  --red: #9f6362;
-  --blue: #314151;
+  --color1: <?php echo $color1;?>;
+  --color2: <?php echo $color2;?>;
+  --color3: <?php echo $color3;?>;
+  --fancy-font: '<?php echo $fancy_font; ?>', cursive;
   --light-grey: #f3f3f3;
   --lighter-grey: #dddddd;
-  --yellow: #e3ab81;
-  --fancy-font: 'Shadows Into Light', cursive;
   --body-font: 'Open Sans', sans-serif;
   --header-height: 100px;
   --alert-height: 60px;
@@ -43,24 +50,13 @@ body {
 }
 
 .highlight-num {
-    color: var(--yellow) !important;
+    color: var(--color3) !important;
 }
 
 nav {
     z-index: 1000;
     margin-top: var(--header-height);
     border-radius: none!important;
-}
-
-.telt {
-    color: var(--white) !important;
-    padding-left: 1%;
-}
-
-h1 {
-    font-size: 2em;
-    font-family: var(--fancy-font);
-    padding-top: 1%;
 }
 
 .tooltipdiv{
@@ -72,7 +68,7 @@ h1 {
     display:none;
     background-color: var(--dark-grey);
     color: var(--white);
-    padding: 1%;
+    padding: 10px;
     border-radius: 0.5em;
     font-size: 0.8em;
     float: right;
@@ -80,9 +76,9 @@ h1 {
 }
 
 .alert-success {
-    background-color: var(--red) !important;
-    color: var(--white) !important;
-    border: var(--red) solid 1px !important;
+    background-color: var(--color3) !important;
+    color: var(--black) !important;
+    border: var(--color3) solid 1px !important;
 }
 
 .alert-danger {
@@ -96,14 +92,13 @@ h1 {
 }
 
 .alert-bar {
-    background-color: var(--yellow);
+    background-color: var(--color3);
     position: fixed;
     width: 100%;
     z-index: 1000;
     min-height: var(--alert-height);
     margin-top: var(--alert-offset);
     padding-top: 1%;
-    padding-bottom: 1%;
     padding-left: 1%;
     padding-right: 1%;
     font-weight: bold;
@@ -119,12 +114,23 @@ h1 {
     width: 100%;
     z-index: 1000;
     top: 0px;
+    color: var(--white);
 }
 
 .header-bar img {
     height: var(--header-height);
     padding: 0.5%;
     filter: grayscale(100%);
+}
+
+.header-bar h1 {
+    font-family: var(--fancy-font);
+    font-size: 2.25em;
+    padding-top: 1%;
+}
+
+.header-bar p {
+    font-size: 0.9em;
 }
 
 .audio-download {
@@ -149,7 +155,7 @@ h1 {
 }
 
 .image-download {
-    color: var(--red);
+    color: var(--color2);
     padding: 2%;
     font-size: 2em;
 }
@@ -160,7 +166,7 @@ h1 {
 }
 
 .admin-link {
-    color: var(--red);
+    color: var(--color2);
 }
 
 .admin-link:hover {
@@ -235,6 +241,7 @@ h3 {
 
     .alert-bar {
         font-size: 0.8em;
+        padding-top: 3%;
     }
 
     .page-arrow{
@@ -269,13 +276,13 @@ h3 {
 
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
     color: var(--white) !important;
-    background-color: var(--blue);
+    background-color: var(--color1);
     border-color: var(--dark-grey) var(--dark-grey) var(--dark-grey);
 }
 
 .nav-tabs .nav-link {
     border: none;
-    color: var(--blue) !important;
+    color: var(--color1) !important;
 }
 
 .nav-tabs {
@@ -283,14 +290,14 @@ h3 {
 }
 
 .dropdown-menu {
-    background-color: var(--red) !important;
+    background-color: var(--color2) !important;
     border: none !important;
     left: -15%;
 }
 
 .dropdown-item {
     color: var(--white) !important;
-    background-color: var(--red) !important;
+    background-color: var(--color2) !important;
 }
 
 .dropdown-item:hover {
@@ -321,7 +328,7 @@ h3 {
 }
 
 .bg-dark {
-    background-color: var(--blue)!important;
+    background-color: var(--color1)!important;
 }
 
 .info-box {
@@ -341,9 +348,9 @@ h3 {
 }
 
 .btn {
-    background: var(--blue) !important;
-    background-color: var(--blue) !important;
-    border-color: var(--blue) !important;
+    background: var(--color1) !important;
+    background-color: var(--color1) !important;
+    border-color: var(--color1) !important;
     border-radius: 0.5em;
     width: 150px;
 }
@@ -354,7 +361,7 @@ h3 {
 
 .view-more {
     text-decoration: none;
-    color: var(--red);
+    color: var(--color2);
 }
 
 .view-more:hover {
@@ -364,7 +371,7 @@ h3 {
 
 a {
     text-decoration: none;
-    color: var(--yellow);
+    color: var(--color2);
 }
 
 a:hover {
@@ -381,7 +388,7 @@ a:hover {
 
 .sm-font {
     font-size: 1em;
-    color: var(--red);
+    color: var(--color2);
 }
 
 .designed-by {
@@ -414,3 +421,10 @@ a:hover {
     text-decoration: none;
     color: var(--black);
 }
+
+.video-frame iframe {
+    width: 100% !important;
+    height: 140px;
+}
+
+</style>

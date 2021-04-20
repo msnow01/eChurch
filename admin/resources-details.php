@@ -12,8 +12,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 
 <?php
 $title = "Resource Manager Details";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 include $dir."inc/tiny.php";
 $resource_id = $_GET['id'];
@@ -80,7 +80,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitaddresource'])) {
                     }
                     $query2 = "UPDATE resources SET rank='".$currRank."' WHERE ID='".$row['id']."'";
                     if (!mysqli_query($link,$query2)){
-                        $error1 = "<div class='alert alert-danger'>Sorry, there was an error updating the rank. Please try again.</div>";
+                        $alert_message = printAlert('danger', 'Sorry, there was an error updating the rank. Please try again.');
                     }
                 }
             }
@@ -90,7 +90,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitaddresource'])) {
     if (isset($_POST['submitchanges'])){
         $query = "UPDATE resources SET title='".$resourcetitle."', category='".$category."', text='".$text."', rank='".$newRank."' WHERE ID='".$resource_id."'";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         }
     }
 
@@ -98,7 +98,7 @@ if (isset($_POST['submitchanges']) || isset($_POST['submitaddresource'])) {
     if (isset($_POST['submitaddresource'])){
         $query = "INSERT INTO resources (title, category, text, rank) VALUES ('".$resourcetitle."', '".$category."', '".$text."', '".$newRank."')";
         if (!mysqli_query($link,$query)){
-            $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+            $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
         } else {
             echo '<meta http-equiv="refresh" content="0; URL='.$dir.'admin/resources.php" />';
         }
@@ -116,7 +116,7 @@ $resource_row = mysqli_fetch_assoc(mysqli_query($link,$query));
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin/resources.php" class="view-more" title="Back"><i class="fas fa-angle-left"></i>&nbsp;See all resources</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
 
         <p>&nbsp;</p>
 
@@ -139,10 +139,6 @@ $resource_row = mysqli_fetch_assoc(mysqli_query($link,$query));
 
                                 <p>&nbsp;</p>
 
-                                <h3><label for="text">Text</label></h3>
-                                <textarea name="text"><?php echo $resource_row['text']; ?></textarea>
-
-                                <p>&nbsp;</p>
                                 <h3 style="float:left">Rank</h3>
 
                                 <?php
@@ -163,7 +159,7 @@ $resource_row = mysqli_fetch_assoc(mysqli_query($link,$query));
                                 <h3 style="float:left">Category</h3>
 
                                 <?php
-                                $tooltip_text = "Choose who will have permissions to see your resource. If you don't select a category, the resource will not be available on the site.";
+                                $tooltip_text = "If you do not select a category, the resource will not be visible on the site.";
                                 tooltip($tooltip_text, TRUE);
 
                                 $query = "SELECT * from categories WHERE type='RESOURCE'";
@@ -187,8 +183,14 @@ $resource_row = mysqli_fetch_assoc(mysqli_query($link,$query));
                                 }
                                 ?>
 
-                                <br>
+                                <p>&nbsp;</p>
+
+                                <h3><label for="text">Text</label></h3>
+                                <textarea name="text"><?php echo $resource_row['text']; ?></textarea>
+
+                                <p>&nbsp;</p>
                                 <hr>
+                                <br>
                         </div>
                     </div>
                     <div class="row">

@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER" && $_SESSION['login_type'] != "ADMIN") {
 }
 
 $title = "Notices Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 //delete notice form functionality
@@ -27,7 +27,7 @@ if (isset($_POST['submitdelete'])){
     //delete data from db
     $query = "DELETE FROM notices WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 }
 
@@ -70,22 +70,22 @@ if (isset($_POST['submitmail'])){
 
     $subject = $row['title'];
     $message = $row['text'];
-    $header = "From: ".$site_title." <".$admin_email_address."> \r\n";
+    $header = "From: ".$site_title." <".$noreply_email_address."> \r\n";
     $header .= "MIME-Version: 1.0\r\n";
     $header .= "Content-type: text/html\r\n";
 
     //send mail
-    $error1 = "<div class='alert alert-success'>";
+
     foreach ($addresses as $user){
         $check = FALSE;
         $check = mail($user,$subject,$message,$header);
         if ($check == TRUE) {
-            $error1 .= "Successfully sent to ".$user."<br>";
+            $alert_message_text .= "Successfully sent to ".$user."<br>";
         } else {
-            $error1 .= "Could not send to ".$user."<br>";
+            $alert_message_text .= "Could not send to ".$user."<br>";
         }
     }
-    $error1 .= "</div>";
+    $alert_message = printAlert('success', $alert_message_text);
 }
 
 
@@ -158,7 +158,7 @@ if ($result = $link->query($query)) {
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin" class="view-more" title="Administration Dashboard"><i class="fas fa-angle-left"></i>&nbsp;Back to dashboard</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
         <p>&nbsp;</p>
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">

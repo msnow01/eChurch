@@ -1,9 +1,11 @@
 <?PHP
 
-$hostDB = "HOST";
-$userDB = "USERNAME";
-$passwordDB = "PASSWORD";
-$databaseDB = "DATABASE";
+// TO DO
+$hostDB = "";
+$userDB = "";
+$passwordDB = "";
+$databaseDB = "";
+// END OF TO DO
 
 $link = mysqli_connect($hostDB, $userDB, $passwordDB, $databaseDB);
 

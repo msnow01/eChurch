@@ -4,7 +4,7 @@
 tinymce.init({
   selector: 'textarea',
   width: "100%",
-  height: 450,
+  height: 500,
   remove_linebreaks : true,
   convert_urls: false,
   plugins: [

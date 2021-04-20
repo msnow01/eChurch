@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 }
 
 $title = "Resources Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 //delete resource form functionality
@@ -19,7 +19,7 @@ if (isset($_POST['submitdelete'])){
     //delete data from db
     $query = "DELETE FROM resources WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
 
     $query3 = "SELECT * from resources WHERE rank > $rank";
@@ -28,7 +28,7 @@ if (isset($_POST['submitdelete'])){
             $currRank = $row['rank'] - 1;
             $query2 = "UPDATE resources SET rank='".$currRank."' WHERE ID='".$row['id']."'";
             if (!mysqli_query($link,$query2)){
-                $error1 = "<div class='alert alert-danger'>Sorry, there was an error updating the rank. Please try again.</div>";
+                $alert_message = printAlert('danger', 'Sorry, there was an error updating the rank. Please try again.');
             }
         }
     }
@@ -75,7 +75,7 @@ if ($result = $link->query($query)) {
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin" class="view-more" title="Administration Dashboard"><i class="fas fa-angle-left"></i>&nbsp;Back to dashboard</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
         <p>&nbsp;</p>
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">

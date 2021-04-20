@@ -7,8 +7,8 @@ if ($_SESSION['login_type'] != "SUPER") {
 }
 
 $title = "Videos Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 if (isset($_POST['submitdelete'])){
@@ -16,9 +16,8 @@ if (isset($_POST['submitdelete'])){
     //remove from list of categories
     $query = "DELETE FROM videos WHERE id='".$number."'";
     if (!mysqli_query($link,$query)){
-        $error1 = "<div class='alert alert-danger'>Sorry, there was an error. Please try again.</div>";
+        $alert_message = printAlert('danger', 'Sorry, there was an error. Please try again.');
     }
-
 }
 
 //delete video modal
@@ -82,7 +81,7 @@ if ($result = $link->query($query)) {
     <div class="container" data-aos="fade-in">
         <h2><?php echo $title; ?></h2>
         <p><a href="<?php echo $dir;?>admin" class="view-more" title="Administration Dashboard"><i class="fas fa-angle-left"></i>&nbsp;Back to dashboard</a></p>
-        <?php echo $error1; ?>
+        <?php echo $alert_message; ?>
         <p>&nbsp;</p>
         <div class="row justify-content-around notice shadow">
             <div class="col-md-12">

@@ -1,8 +1,7 @@
 <?php
-$admin_email_address = "EMAILADDRESS";
-$site_title = "eChurch";
-$tiny_mce_id = "TINYMCEID";
-$webex_link = "";
+$site_title = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='site_title'"))['value'];
+$admin_email_address = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='admin_email_address'"))['value'];
+$header_address = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='header_address'"))['value'];
 ?>
 
 <head>
@@ -12,7 +11,7 @@ $webex_link = "";
     <meta name="author" content="<?php echo $site_title;?>">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
 
-    <meta name="description" content="<?php echo $site_title;?> is an online platform used for worship and praise.">
+    <meta name="description" content="<?php echo $site_title;?>">
     <title><?php echo $title; ?> | <?php echo $site_title; ?></title>
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -25,16 +24,38 @@ $webex_link = "";
     <script src="https://kit.fontawesome.com/b029d12cb7.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <link rel="shortcut icon" href="<?php echo $dir;?>img/icon.jpg">
-    <link rel="stylesheet" href="<?php echo $dir;?>css/styles.css">
+    <link rel="shortcut icon" href="<?php echo $dir;?>img/icon.png">
 
 </head>
 
+<!-- TO DO _-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N5S1NNB9VW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N5S1NNB9VW');
+</script>
+
 <?php
+$noreply_email_address = "";
+$tiny_mce_id = "";
+?>
+<!-- END OF TO DO -->
+
+<?php
+$color1 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color1'"))['value'];
+$color2 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color2'"))['value'];
+$color3 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color3'"))['value'];
+$fancy_font = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='fancy_font'"))['value'];
+include "styles.php";
+$base_url = "https://".$_SERVER['HTTP_HOST']."/";
 $user_types = array("PENDING", "USER", "ADMIN", "SUPER");
 $category_types = array("VIDEO", "AUDIO", "RESOURCE", "NOTICE", "ALERT", "LIVE");
+$fancy_font_array = array('Dancing Script', 'Great Vibes', 'Kaushan Script', 'Arizonia', 'Eagle Lake', 'Comic Neue', 'Bad Script', 'Charm');
 $maximages = "3";
 $maxvideos = "16";
 $maxaudio = "16";
 $maxnotices = "5";
+$live_stream_link = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='live_stream_link'"))['value'];
 ?>

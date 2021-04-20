@@ -7,6 +7,7 @@ if (isset($_SESSION['login_id'])) {
 
 $dir="../";
 include $dir."inc/connection.php";
+include $dir."inc/functions.php";
 
 //login form functionality
 if (isset($_POST['submitlogin'])) {
@@ -14,11 +15,10 @@ if (isset($_POST['submitlogin'])) {
     $email = addslashes(strtolower($_POST['email']));
     $pass = addslashes($_POST['password']);
     $password = sha1($pass); //encrypt password
-    $error1 = "";
 
     //check that all fields are filled
     if (!$email || !$pass){
-        $error1 = "<div class='alert alert-danger'>Sorry, you must provide your email address and password.</div>";
+        $alert_message = printAlert('danger', 'Sorry, you must provide your email address and password.');
     } else {
         //check data base for account
         $query = "SELECT * from users WHERE email='".$email."' and password='".$password."' and type !='PENDING'";
@@ -33,7 +33,7 @@ if (isset($_POST['submitlogin'])) {
             $location = "location: ".$dir."home";
             header($location);
         } else {
-            $error1 = '<div class="alert alert-danger" role="alert">Incorrect email or password.<br>Please try again.</div>';
+            $alert_message = printAlert('danger', 'Incorrect email or password.<br>Please try again.');
         }
     }
 }
@@ -55,7 +55,7 @@ include $dir."inc/header.php";
                 <div class="col-md-5 white-box" data-aos="fade-in">
                     <h2>Log In</h2>
                     <p>If you do not have an existing account,<br>please <a href="<?php echo $dir;?>account/signup.php" class="view-more" title="Sign Up">sign up</a>.</p>
-                    <?php echo $error1; ?>
+                    <?php echo $alert_message; ?>
                     <form method="post">
                         <p><label for="email" class="display-none">Email</label><input required autocomplete="off" type="email" class="form-control" name="email" id="email" placeholder="Email"></p>
                         <p><label for="password" class="display-none">Password</label><input required autocomplete="off" type="password" class="form-control" name="password" id="password" placeholder="Password"></p>

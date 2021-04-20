@@ -6,8 +6,8 @@ if ($_SESSION['login_type'] != "SUPER") {
     header($location);
 }
 $title = "User Manager";
-include $dir."inc/header.php";
 include $dir."inc/connection.php";
+include $dir."inc/header.php";
 include $dir."inc/functions.php";
 
 //delete user form functionality
