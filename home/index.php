@@ -25,19 +25,26 @@ include $dir."notices/notice-query.php";
                 <p class="sm-font">Listen to past services.</p>
                 <div class="btn btn-dark">Listen</div>
             </a>
-            <?php if ($session_row['livestreamlive']){
-                echo '<a href="'.$live_stream_link.'" target="_blank" class="shadow col-md-3 info-box">
-                    <h2><i class="fas fa-play"></i>&nbsp;Live</h2>
-                    <p class="sm-font">Join live services.</p>
-                    <div class="btn btn-dark">Join</div>
-                </a>';
+            <?php
+            if ($session_row['livestreamlive']){
+                if ($live_stream_link){
+                    echo '<a href="'.$live_stream_link.'" target="_blank" class="shadow col-md-3 info-box">
+                        <h2><i class="fas fa-play"></i>&nbsp;Live</h2>
+                        <p class="sm-font">Join live services.</p>
+                        <div class="btn btn-dark">Join</div>
+                    </a>';
+                } else {
+                    echo '<div class="shadow col-md-3 info-box">
+                        <h2><i class="fas fa-play"></i>&nbsp;Live</h2>
+                        <p class="sm-font">There is no live stream.</p>
+                    </div>';
+                }
             } else {
                 echo '<div class="shadow col-md-3 info-box">
                     <h2><i class="fas fa-play"></i>&nbsp;Live</h2>
                     <p class="sm-font">You do not have access to join live.</p>
                 </div>';
             }
-
             ?>
         </div>
         <p>&nbsp;</p>

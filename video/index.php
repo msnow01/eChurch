@@ -83,7 +83,7 @@ $div = $counter/$maxvideos;
                                     if ($result = $link->query($query)) {
                                         while ($row = $result->fetch_assoc()) {
                                             echo '<div class="col-md-3">
-                                                <div class="shadow video-frame">'.$row['iframe'].'</div>
+                                                <div class="video-frame">'.$row['iframe'].'</div>
                                                 <br>
                                                 <h3>'.$row['title'].'</h3>
                                                 <p class="sm-font">'.dateFormat($row['date']).'</p>

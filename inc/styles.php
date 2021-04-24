@@ -50,7 +50,7 @@ body {
 }
 
 .highlight-num {
-    color: var(--color3) !important;
+    color: var(--color1) !important;
 }
 
 nav {
@@ -142,6 +142,7 @@ nav {
 
 .audio-download:hover, .image-download:hover {
     color: var(--dark-grey);
+    text-decoration: none;
 }
 
 .no-link {
@@ -424,7 +425,8 @@ a:hover {
 
 .video-frame iframe {
     width: 100% !important;
-    height: 140px;
+    height: 140px !important;
+    filter: drop-shadow(3px 3px 3px #000);
 }
 
 </style>

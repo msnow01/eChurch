@@ -53,7 +53,7 @@ $query = "SELECT * from videos";
 if ($result = $link->query($query)) {
     while ($row = $result->fetch_assoc()) {
         echo '<div class="modal fade" id="previewvideo'.$row['id'].'" data-backdrop="static" tabindex="-1" aria-labelledby="preview video" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-body">
                   <h2>Preview Video</h2>
