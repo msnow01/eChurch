@@ -28,14 +28,9 @@ $header_address = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content W
 
 </head>
 
-<!-- TO DO _-->
 <?php
-$noreply_email_address = "";
-$tiny_mce_id = "";
-?>
-<!-- END OF TO DO -->
+include $dir."inc/config.php";
 
-<?php
 $color1 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color1'"))['value'];
 $color2 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color2'"))['value'];
 $color3 = mysqli_fetch_assoc(mysqli_query($link,"SELECT * from content WHERE type='color3'"))['value'];
